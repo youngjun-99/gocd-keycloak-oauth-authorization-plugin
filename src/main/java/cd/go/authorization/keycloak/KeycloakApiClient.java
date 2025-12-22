@@ -64,7 +64,6 @@ public class KeycloakApiClient {
 
         return HttpUrl.parse(keycloakConfiguration.keycloakEndpoint())
                 .newBuilder()
-                .addPathSegments("auth")
                 .addPathSegments("realms")
                 .addPathSegments(realm)
                 .addPathSegments("protocol")
@@ -90,7 +89,6 @@ public class KeycloakApiClient {
 
         final String accessTokenUrl = HttpUrl.parse(keycloakConfiguration.keycloakEndpoint())
                 .newBuilder()
-                .addPathSegments("auth")
                 .addPathSegments("realms")
                 .addPathSegments(realm)
                 .addPathSegments("protocol")
@@ -133,7 +131,6 @@ public class KeycloakApiClient {
 
         final String userProfileUrl = HttpUrl.parse(keycloakConfiguration.keycloakEndpoint())
                 .newBuilder()
-                .addPathSegments("auth")
                 .addPathSegments("realms")
                 .addPathSegments(realm)
                 .addPathSegments("protocol")
@@ -182,7 +179,6 @@ public class KeycloakApiClient {
 
         final String introspectUrl = HttpUrl.parse(keycloakConfiguration.keycloakEndpoint())
                 .newBuilder()
-                .addPathSegments("auth")
                 .addPathSegments("realms")
                 .addPathSegments(realm)
                 .addPathSegments("protocol")
@@ -221,7 +217,6 @@ public class KeycloakApiClient {
 
         final String refreshTokenUrl = HttpUrl.parse(keycloakConfiguration.keycloakEndpoint())
                 .newBuilder()
-                .addPathSegments("auth")
                 .addPathSegments("realms")
                 .addPathSegments(realm)
                 .addPathSegments("protocol")
