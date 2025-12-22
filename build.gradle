@@ -14,41 +14,26 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
-apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 60)}"
-
-gocdPlugin {
-    id = 'cd.go.authorization.keycloak'
-    pluginVersion = '2.0.0'
-    goCdVersion = '19.2.0'
-    name = 'Keycloak oauth authorization plugin'
-    description = 'Keycloak oauth authorization plugin for GoCD'
-    vendorName = 'klinux'
-    vendorUrl = 'https://github.com/klinux/gocd-keycloak-oauth-authorization-plugin'
-
-    githubRepo {
-        owner = System.getenv('GITHUB_USER') ?: 'klinux'
-        repo = 'gocd-keycloak-oauth-authorization-plugin'
-        token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
-    }
-
-    pluginProject = project
-
-    prerelease = !"No".equalsIgnoreCase(System.getenv('PRERELEASE'))
-    assetsToRelease = [project.tasks.jar]
-
-    licenseReport {
-        excludes = [
-                'com.squareup.okio:okio'
-        ]
-    }
+plugins {
+    id 'java'
+    id 'com.github.breadmoirai.github-release' version '2.4.1'
 }
 
 group = 'cd.go'
-version = gocdPlugin.fullVersion(project)
+version = '2.1.0'
+
+ext {
+    pluginId = 'cd.go.authorization.keycloak'
+    pluginVersion = project.version
+    goCdVersion = '19.2.0'
+    pluginName = 'Keycloak oauth authorization plugin'
+    pluginDescription = 'Keycloak oauth authorization plugin for GoCD'
+    vendorName = 'klinux'
+    vendorUrl = 'https://github.com/klinux/gocd-keycloak-oauth-authorization-plugin'
+}
 
 repositories {
-    jcenter()
+    mavenCentral()
     mavenLocal()
 }
 
@@ -85,35 +70,42 @@ tasks.withType(Jar) { jarTask ->
     reproducibleFileOrder = true
 
     ['MD5', 'SHA1', 'SHA-256'].each { algo ->
-        jarTask.outputs.files("${jarTask.archivePath}.${algo}")
+        jarTask.outputs.files("${jarTask.archiveFile.get()}.${algo}")
         jarTask.doLast {
-            ant.checksum file: jarTask.archivePath, format: 'MD5SUM', algorithm: algo
+            ant.checksum file: jarTask.archiveFile.get(), format: 'MD5SUM', algorithm: algo
         }
     }
 
     manifest {
         attributes(
-                'Go-Version': project.gocdPlugin.goCdVersion,
-                'Plugin-Revision': project.gocdPlugin.pluginVersion,
-                'Implementation-Title': project.gocdPlugin.name,
-                'Implementation-Version': project.gocdPlugin.pluginVersion,
-                'Source-Compatibility': project.sourceCompatibility,
-                'Target-Compatibility': project.targetCompatibility
+                'Go-Version': project.ext.goCdVersion,
+                'Plugin-Revision': project.ext.pluginVersion,
+                'Implementation-Title': project.ext.pluginName,
+                'Implementation-Version': project.ext.pluginVersion,
+                'Source-Compatibility': project.java.sourceCompatibility,
+                'Target-Compatibility': project.java.targetCompatibility
         )
     }
 }
 
-sourceSets {
-    test {
-        java {
-            compileClasspath += configurations.compileOnly
-            runtimeClasspath += configurations.compileOnly
-        }
-    }
+configurations {
+    testImplementation.extendsFrom compileOnly
 }
 
 jar {
+    archiveBaseName.set('keycloak-oauth-authorization-plugin')
     from(configurations.runtimeClasspath) {
         into "lib/"
     }
+}
+
+githubRelease {
+    owner = System.getenv('GITHUB_USER') ?: 'klinux'
+    repo = 'gocd-keycloak-oauth-authorization-plugin'
+    token = System.getenv('GITHUB_TOKEN') ?: ''
+    tagName = "v${project.version}"
+    releaseName = "v${project.version}"
+    targetCommitish = 'main'
+    prerelease = !"No".equalsIgnoreCase(System.getenv('PRERELEASE'))
+    releaseAssets = jar.outputs.files
 }
