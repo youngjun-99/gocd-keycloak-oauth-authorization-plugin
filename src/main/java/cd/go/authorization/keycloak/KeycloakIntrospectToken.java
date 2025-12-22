@@ -31,7 +31,7 @@ public class KeycloakIntrospectToken {
 
     @Expose
     @SerializedName("aud")
-    private String aud;
+    private Object aud;
 
     @Expose
     @SerializedName("active")
@@ -48,7 +48,7 @@ public class KeycloakIntrospectToken {
         return active;
     }
 
-    public String getAudience() {
+    public Object getAudience() {
         return aud;
     }
 
