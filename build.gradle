@@ -100,8 +100,9 @@ jar {
 }
 
 githubRelease {
-    owner = System.getenv('GITHUB_USER') ?: 'klinux'
-    repo = 'gocd-keycloak-oauth-authorization-plugin'
+    def repoSlug = System.getenv('GITHUB_REPOSITORY')?.split('/') ?: ['klinux', 'gocd-keycloak-oauth-authorization-plugin']
+    owner = repoSlug[0]
+    repo = repoSlug.size() > 1 ? repoSlug[1] : 'gocd-keycloak-oauth-authorization-plugin'
     token = System.getenv('GITHUB_TOKEN') ?: ''
     tagName = "v${project.version}"
     releaseName = "v${project.version}"
