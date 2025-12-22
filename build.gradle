@@ -92,6 +92,14 @@ configurations {
     testImplementation.extendsFrom compileOnly
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources', 'src/main/resources-generated']
+        }
+    }
+}
+
 jar {
     archiveBaseName.set('keycloak-oauth-authorization-plugin')
     from(configurations.runtimeClasspath) {
