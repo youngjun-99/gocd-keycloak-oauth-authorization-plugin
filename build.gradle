@@ -20,7 +20,7 @@ plugins {
 }
 
 group = 'cd.go'
-version = '2.1.0'
+version = '2.1.1'
 
 ext {
     pluginId = 'cd.go.authorization.keycloak'
