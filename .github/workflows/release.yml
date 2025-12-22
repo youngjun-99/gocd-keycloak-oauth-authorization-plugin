@@ -12,12 +12,16 @@ on:
         default: 'NO'
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
     env:
       GITHUB_USER: "klinux"
       GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      PRERELEASE: "${{ github.event.inputs.prerelease }}"
     steps:
       - uses: actions/checkout@v3
         with:
