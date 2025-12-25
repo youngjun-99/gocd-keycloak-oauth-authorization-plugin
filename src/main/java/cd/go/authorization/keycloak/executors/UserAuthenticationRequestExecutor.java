@@ -53,15 +53,23 @@ public class UserAuthenticationRequestExecutor implements RequestExecutor {
             throw new NoAuthorizationConfigurationException("[Authenticate] No authorization configuration found.");
         }
 
-        final AuthConfig authConfig = request.authConfigs().get(0);
-        final KeycloakConfiguration configuration = request.authConfigs().get(0).getConfiguration();
-        final KeycloakApiClient keycloakApiClient = configuration.keycloakApiClient();
-        final KeycloakUser keycloakUser = keycloakApiClient.userProfile(request.tokenInfo());
+        try {
+            final AuthConfig authConfig = request.authConfigs().get(0);
+            final KeycloakConfiguration configuration = request.authConfigs().get(0).getConfiguration();
+            final KeycloakApiClient keycloakApiClient = configuration.keycloakApiClient();
 
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("user", new User(keycloakUser));
-        userMap.put("roles", keycloakAuthorizer.authorize(keycloakUser, authConfig, request.roles()));
+            LOG.info("[UserAuthenticationRequestExecutor] Fetching user profile from Keycloak...");
+            final KeycloakUser keycloakUser = keycloakApiClient.userProfile(request.tokenInfo());
+            LOG.info("[UserAuthenticationRequestExecutor] User profile fetched successfully: " + keycloakUser.getPreferredUsername());
 
-        return DefaultGoPluginApiResponse.success(GSON.toJson(userMap));
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("user", new User(keycloakUser));
+            userMap.put("roles", keycloakAuthorizer.authorize(keycloakUser, authConfig, request.roles()));
+
+            return DefaultGoPluginApiResponse.success(GSON.toJson(userMap));
+        } catch (Exception e) {
+            LOG.error("[UserAuthenticationRequestExecutor] Authentication failed: " + e.getMessage(), e);
+            throw e;
+        }
     }
 }
