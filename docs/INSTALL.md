@@ -2,8 +2,19 @@
 
 ## Requirements
 
-* GoCD server version v17.5.0 or above
-* Keycloak [API documentation](https://www.keycloak.org/docs-api/11.0/rest-api/index.html)
+* GoCD server version17.5.0 or above
+* Keycloak version requirements:
+
+| Plugin Version | Keycloak Version | Note |
+|----------------|------------------|------|
+| 3.x | 17.0.0+ (Quarkus) | `/auth` context path removed by default |
+| 2.x and below | 16.x and below (WildFly) | `/auth` context path included |
+
+> **Important:** Keycloak 17.0.0 migrated from WildFly to Quarkus and removed the default `/auth` context path. Plugin 3.x is designed for Keycloak 17+ without the `/auth` path.
+>
+> If you're using Keycloak 17+ but have configured `--http-relative-path /auth` to keep the legacy path, use plugin version 2.x instead.
+
+* Keycloak [API documentation](https://www.keycloak.org/docs/latest/server_admin/)
 
 ## Installation
 

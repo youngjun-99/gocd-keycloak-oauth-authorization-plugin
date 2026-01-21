@@ -17,26 +17,26 @@
 package cd.go.authorization.keycloak.executors;
 
 import cd.go.authorization.keycloak.requests.VerifyConnectionRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 
-public class VerifyConnectionRequestExecutorTest {
+class VerifyConnectionRequestExecutorTest {
     private VerifyConnectionRequest request;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    void setup() throws Exception {
         request = mock(VerifyConnectionRequest.class);
     }
 
     @Test
-    public void shouldReturnFailureResponseIfVerifyConnectionFails() throws Exception {
+    void shouldReturnFailureResponseIfVerifyConnectionFails() throws Exception {
        //TODO:
     }
 
     @Test
-    public void shouldReturnSuccessResponseOnSuccessfulVerification() throws Exception {
+    void shouldReturnSuccessResponseOnSuccessfulVerification() throws Exception {
         //TODO:
     }
 }

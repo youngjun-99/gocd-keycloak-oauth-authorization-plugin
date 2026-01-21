@@ -21,36 +21,34 @@ import cd.go.authorization.keycloak.models.TokenInfo;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class KeycloakApiClientTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class KeycloakApiClientTest {
 
     @Mock
     private KeycloakConfiguration KeycloakConfiguration;
     private MockWebServer server;
     private KeycloakApiClient KeycloakApiClient;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-
+    @BeforeEach
+    void setUp() throws Exception {
         server = new MockWebServer();
         server.start();
 
@@ -64,20 +62,20 @@ public class KeycloakApiClientTest {
         KeycloakApiClient = new KeycloakApiClient(KeycloakConfiguration);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         server.shutdown();
     }
 
     @Test
-    public void shouldReturnAuthorizationServerUrl() throws Exception {
+    void shouldReturnAuthorizationServerUrl() throws Exception {
         final String authorizationServerUrl = KeycloakApiClient.authorizationServerUrl("call-back-url");
 
         assertThat(authorizationServerUrl, startsWith("https://example.com/realms/master/protocol/openid-connect/auth?client_id=client-id&redirect_uri=call-back-url&response_type=code&scope=openid%20profile%20email%20groups%20roles&state="));
     }
 
     @Test
-    public void shouldFetchTokenInfoUsingAuthorizationCode() throws Exception {
+    void shouldFetchTokenInfoUsingAuthorizationCode() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(new TokenInfo("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9", 3600, "bearer", "refresh-token").toJSON()));

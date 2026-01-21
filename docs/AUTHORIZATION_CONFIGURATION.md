@@ -16,7 +16,13 @@ The `Authorization Configuration` is used to configure a connection to an Keyclo
         <value>https://auth.example.com</value>
       </property>
     ```
-   > If you customize the Keycloak endpoint, Ex.: remove /auth context, you need to adapt the plugin.
+
+   > **Note on `/auth` context path:**
+   > - **Plugin 3.x** is designed for **Keycloak 17+** (Quarkus-based) which does NOT include `/auth` in the URL by default.
+   >   - Example: `https://keycloak.example.com` (without `/auth`)
+   > - **Plugin 2.x and below** is designed for **Keycloak 16 and below** (WildFly-based) which includes `/auth`.
+   >   - Example: `https://keycloak.example.com/auth`
+   > - If you're using Keycloak 17+ with `--http-relative-path /auth` configured, use plugin 2.x.
 
 5. **Keycloak Realm (`Mandatory`):** Specify your Keycloak Realm.
 

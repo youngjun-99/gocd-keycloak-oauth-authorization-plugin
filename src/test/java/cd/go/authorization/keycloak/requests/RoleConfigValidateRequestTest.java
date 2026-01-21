@@ -18,28 +18,23 @@ package cd.go.authorization.keycloak.requests;
 
 import cd.go.authorization.keycloak.models.KeycloakRoleConfiguration;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class RoleConfigValidateRequestTest {
+@ExtendWith(MockitoExtension.class)
+class RoleConfigValidateRequestTest {
 
     @Mock
     private GoPluginApiRequest apiRequest;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
-
     @Test
-    public void shouldDeserializeGoPluginApiRequestToRoleConfigValidateRequest() throws Exception {
+    void shouldDeserializeGoPluginApiRequestToRoleConfigValidateRequest() throws Exception {
         String responseBody = "{\n" +
                 "  \"Groups\": \"group-1,group-2\",\n" +
                 "  \"Users\": \"bob,alice\"\n" +

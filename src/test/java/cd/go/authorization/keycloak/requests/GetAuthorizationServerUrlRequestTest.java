@@ -19,29 +19,24 @@ package cd.go.authorization.keycloak.requests;
 import cd.go.authorization.keycloak.executors.GetAuthorizationServerUrlRequestExecutor;
 import cd.go.authorization.keycloak.models.AuthConfig;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class GetAuthorizationServerUrlRequestTest {
+@ExtendWith(MockitoExtension.class)
+class GetAuthorizationServerUrlRequestTest {
     @Mock
     private GoPluginApiRequest apiRequest;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
-
     @Test
-    public void shouldDeserializeGoPluginApiRequestToGetAuthorizationServerUrlRequest() throws Exception {
+    void shouldDeserializeGoPluginApiRequestToGetAuthorizationServerUrlRequest() throws Exception {
         String responseBody = "{\n" +
                 "  \"authorization_server_callback_url\": \"https://redirect.url\",\n" +
                 "  \"auth_configs\": [\n" +

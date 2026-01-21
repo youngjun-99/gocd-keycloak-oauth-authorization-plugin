@@ -18,26 +18,23 @@ package cd.go.authorization.keycloak.requests;
 
 import cd.go.authorization.keycloak.models.KeycloakConfiguration;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class AuthConfigValidateRequestTest {
+@ExtendWith(MockitoExtension.class)
+class AuthConfigValidateRequestTest {
     @Mock
     private GoPluginApiRequest apiRequest;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
-
     @Test
-    public void shouldDeserializeGoPluginApiRequestToAuthConfigValidateRequest() throws Exception {
+    void shouldDeserializeGoPluginApiRequestToAuthConfigValidateRequest() throws Exception {
         String responseBody = "{\n" +
                 "  \"KeycloakEndpoint\": \"https://example.com\",\n" +
                 "  \"ClientId\": \"client-id\",\n" +

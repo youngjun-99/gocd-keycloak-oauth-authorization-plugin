@@ -19,8 +19,8 @@ package cd.go.authorization.keycloak.requests;
 import com.google.gson.Gson;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
@@ -30,16 +30,16 @@ import static java.util.Collections.singletonMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RoleConfigValidateRequestExecutorTest {
+class RoleConfigValidateRequestExecutorTest {
     private GoPluginApiRequest request;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    void setup() throws Exception {
         request = mock(GoPluginApiRequest.class);
     }
 
     @Test
-    public void shouldValidateEmptyRoleConfig() throws Exception {
+    void shouldValidateEmptyRoleConfig() throws Exception {
         when(request.requestBody()).thenReturn(new Gson().toJson(Collections.emptyMap()));
 
         GoPluginApiResponse response = RoleConfigValidateRequest.from(request).execute();
@@ -60,7 +60,7 @@ public class RoleConfigValidateRequestExecutorTest {
     }
 
     @Test
-    public void shouldValidateValidRoleConfig() throws Exception {
+    void shouldValidateValidRoleConfig() throws Exception {
         when(request.requestBody()).thenReturn(new Gson().toJson(singletonMap("Groups", "Users")));
 
         GoPluginApiResponse response = RoleConfigValidateRequest.from(request).execute();

@@ -20,26 +20,26 @@ import cd.go.authorization.keycloak.annotation.MetadataHelper;
 import cd.go.authorization.keycloak.models.KeycloakConfiguration;
 import com.google.gson.Gson;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GetAuthConfigMetadataRequestExecutorTest {
+class GetAuthConfigMetadataRequestExecutorTest {
 
     @Test
-    public void shouldSerializeAllFields() throws Exception {
+    void shouldSerializeAllFields() throws Exception {
         GoPluginApiResponse response = new GetAuthConfigMetadataRequestExecutor().execute();
         List list = new Gson().fromJson(response.responseBody(), List.class);
         assertEquals(list.size(), MetadataHelper.getMetadata(KeycloakConfiguration.class).size());
     }
 
     @Test
-    public void assertJsonStructure() throws Exception {
+    void assertJsonStructure() throws Exception {
         GoPluginApiResponse response = new GetAuthConfigMetadataRequestExecutor().execute();
 
         assertThat(response.responseCode(), is(200));

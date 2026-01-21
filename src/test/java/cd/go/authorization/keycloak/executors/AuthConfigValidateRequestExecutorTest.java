@@ -20,8 +20,8 @@ import cd.go.authorization.keycloak.requests.AuthConfigValidateRequest;
 import com.google.gson.Gson;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
@@ -30,17 +30,17 @@ import java.util.Collections;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AuthConfigValidateRequestExecutorTest {
+class AuthConfigValidateRequestExecutorTest {
 
     private GoPluginApiRequest request;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    void setup() throws Exception {
         request = mock(GoPluginApiRequest.class);
     }
 
     @Test
-    public void shouldValidateMandatoryKeys() throws Exception {
+    void shouldValidateMandatoryKeys() throws Exception {
         when(request.requestBody()).thenReturn(new Gson().toJson(Collections.emptyMap()));
 
         GoPluginApiResponse response = AuthConfigValidateRequest.from(request).execute();

@@ -24,24 +24,26 @@ import cd.go.authorization.keycloak.models.KeycloakConfiguration;
 import cd.go.authorization.keycloak.models.TokenInfo;
 import cd.go.authorization.keycloak.requests.UserAuthenticationRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Collections;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class UserAuthenticationRequestExecutorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UserAuthenticationRequestExecutorTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
     @Mock
     private UserAuthenticationRequest request;
     @Mock
@@ -52,10 +54,8 @@ public class UserAuthenticationRequestExecutorTest {
     private KeycloakApiClient keycloakApiClient;
     private UserAuthenticationRequestExecutor executor;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-
+    @BeforeEach
+    void setUp() throws Exception {
         when(authConfig.getConfiguration()).thenReturn(keycloakConfiguration);
         when(keycloakConfiguration.keycloakApiClient()).thenReturn(keycloakApiClient);
 
@@ -63,17 +63,19 @@ public class UserAuthenticationRequestExecutorTest {
     }
 
     @Test
-    public void shouldErrorOutIfAuthConfigIsNotProvided() throws Exception {
+    void shouldErrorOutIfAuthConfigIsNotProvided() throws Exception {
         when(request.authConfigs()).thenReturn(Collections.emptyList());
 
-        thrown.expect(NoAuthorizationConfigurationException.class);
-        thrown.expectMessage("[Authenticate] No authorization configuration found.");
+        NoAuthorizationConfigurationException exception = assertThrows(
+                NoAuthorizationConfigurationException.class,
+                () -> executor.execute()
+        );
 
-        executor.execute();
+        assertThat(exception.getMessage(), is("[Authenticate] No authorization configuration found."));
     }
 
     @Test
-    public void shouldAuthenticate() throws Exception {
+    void shouldAuthenticate() throws Exception {
         final TokenInfo tokenInfo = new TokenInfo("31239032-xycs.xddasdasdasda", 7200, "foo-type", "refresh-xysaddasdjlascdas");
 
         when(request.authConfigs()).thenReturn(Collections.singletonList(authConfig));

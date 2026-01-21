@@ -2,6 +2,15 @@
 
 The plugin allows user to login in GoCD using an Keycloak account. It is implemented using [GoCD authorization endpoint](https://plugin-api.gocd.org/current/authorization/).
 
+# Requirements
+
+| Plugin Version | Keycloak Version | Note |
+|----------------|------------------|------|
+| 3.x | 17.0.0+ (Quarkus) | `/auth` context path removed by default |
+| 2.x and below | 16.x and below (WildFly) | `/auth` context path included |
+
+> **Note:** Starting from Keycloak 17.0.0, the default context path `/auth` was removed as part of the migration from WildFly to Quarkus. If you are using Keycloak 17+ with legacy `/auth` path configured via `--http-relative-path /auth`, you may need to use plugin version 2.x or adjust your Keycloak endpoint accordingly.
+
 # Installation
 
 Installation documentation available [here](docs/INSTALL.md).

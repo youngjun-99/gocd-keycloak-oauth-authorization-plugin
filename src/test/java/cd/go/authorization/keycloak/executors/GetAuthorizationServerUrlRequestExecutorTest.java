@@ -22,24 +22,26 @@ import cd.go.authorization.keycloak.models.AuthConfig;
 import cd.go.authorization.keycloak.models.KeycloakConfiguration;
 import cd.go.authorization.keycloak.requests.GetAuthorizationServerUrlRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class GetAuthorizationServerUrlRequestExecutorTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class GetAuthorizationServerUrlRequestExecutorTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
     @Mock
     private GetAuthorizationServerUrlRequest request;
     @Mock
@@ -51,29 +53,30 @@ public class GetAuthorizationServerUrlRequestExecutorTest {
 
     private GetAuthorizationServerUrlRequestExecutor executor;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-
+    @BeforeEach
+    void setUp() throws Exception {
         executor = new GetAuthorizationServerUrlRequestExecutor(request);
     }
 
     @Test
-    public void shouldErrorOutIfAuthConfigIsNotProvided() throws Exception {
+    void shouldErrorOutIfAuthConfigIsNotProvided() throws Exception {
         when(request.authConfigs()).thenReturn(Collections.emptyList());
 
-        thrown.expect(NoAuthorizationConfigurationException.class);
-        thrown.expectMessage("[Authorization Server Url] No authorization configuration found.");
+        NoAuthorizationConfigurationException exception = assertThrows(
+                NoAuthorizationConfigurationException.class,
+                () -> executor.execute()
+        );
 
-        executor.execute();
+        assertThat(exception.getMessage(), is("[Authorization Server Url] No authorization configuration found."));
     }
 
     @Test
-    public void shouldReturnAuthorizationServerUrl() throws Exception {
+    void shouldReturnAuthorizationServerUrl() throws Exception {
         when(authConfig.getConfiguration()).thenReturn(keycloakConfiguration);
         when(request.authConfigs()).thenReturn(Collections.singletonList(authConfig));
+        when(request.callbackUrl()).thenReturn("https://callback.url");
         when(keycloakConfiguration.keycloakApiClient()).thenReturn(keycloakApiClient);
-        when(keycloakApiClient.authorizationServerUrl(request.callbackUrl())).thenReturn("https://authorization-server-url");
+        when(keycloakApiClient.authorizationServerUrl("https://callback.url")).thenReturn("https://authorization-server-url");
 
         final GoPluginApiResponse response = executor.execute();
 

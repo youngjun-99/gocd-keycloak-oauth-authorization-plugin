@@ -17,16 +17,16 @@
 package cd.go.authorization.keycloak.executors;
 
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
-public class GetRoleConfigMetadataRequestExecutorTest {
+class GetRoleConfigMetadataRequestExecutorTest {
 
     @Test
-    public void shouldReturnRoleConfigMetadata() throws Exception {
+    void shouldReturnRoleConfigMetadata() throws Exception {
         final GoPluginApiResponse response = new GetRoleConfigMetadataRequestExecutor().execute();
 
         assertThat(response.responseCode(), is(200));

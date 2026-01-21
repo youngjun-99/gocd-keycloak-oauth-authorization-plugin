@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2023 klinux
+  ~ Copyright 2025 youngjun-99
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 <go-plugin id="cd.go.authorization.keycloak" version="1">
   <about>
     <name>Keycloak oauth authorization plugin</name>
-    <version>2.1.3</version>
-    <target-go-version>19.2.0</target-go-version>
+    <version>3.0.1</version>
+    <target-go-version>25.4.0</target-go-version>
     <description>Keycloak oauth authorization plugin for GoCD</description>
     <vendor>
-      <name>klinux</name>
-      <url>https://github.com/klinux/gocd-keycloak-oauth-authorization-plugin</url>
+      <name>youngjun-99</name>
+      <url>https://github.com/youngjun-99/gocd-keycloak-oauth-authorization-plugin</url>
     </vendor>
 
   </about>

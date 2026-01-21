@@ -19,28 +19,23 @@ package cd.go.authorization.keycloak.requests;
 import cd.go.authorization.keycloak.executors.VerifyConnectionRequestExecutor;
 import cd.go.authorization.keycloak.models.KeycloakConfiguration;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class VerifyConnectionRequestTest {
+@ExtendWith(MockitoExtension.class)
+class VerifyConnectionRequestTest {
     @Mock
     private GoPluginApiRequest apiRequest;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
-
     @Test
-    public void shouldDeserializeGoPluginApiRequestToVerifyConnectionRequest() throws Exception {
+    void shouldDeserializeGoPluginApiRequestToVerifyConnectionRequest() throws Exception {
         String responseBody = "{\n" +
                 "  \"GoServerUrl\": \"https://your.go.server.url\",\n" +
                 "  \"KeycloakEndpoint\": \"https://example.com\",\n" +
