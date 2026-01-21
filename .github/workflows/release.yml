@@ -19,7 +19,7 @@ jobs:
   build_and_release:
     runs-on: ubuntu-latest
     env:
-      GITHUB_USER: "klinux"
+      GITHUB_USER: "youngjun-99"
       GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       PRERELEASE: "${{ github.event.inputs.prerelease }}"
     steps:
@@ -27,9 +27,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          java-version: 11
+          java-version: 21
           distribution: temurin
       - name: Release
         run: ./gradlew githubRelease
