@@ -16,12 +16,11 @@
 
 package cd.go.authorization.keycloak
 
-import cd.go.authorization.keycloak.models.AuthConfig
 import java.text.MessageFormat.format
 
 class MembershipChecker {
 
-    fun isAMemberOfAtLeastOneGroup(loggedInUser: KeycloakUser, @Suppress("UNUSED_PARAMETER") authConfig: AuthConfig, groupsAllowed: List<String>): Boolean {
+    fun isAMemberOfAtLeastOneGroup(loggedInUser: KeycloakUser, groupsAllowed: List<String>): Boolean {
         if (groupsAllowed.isEmpty()) {
             KeycloakPlugin.LOG.info("[MembershipChecker] No groups provided.")
             return false

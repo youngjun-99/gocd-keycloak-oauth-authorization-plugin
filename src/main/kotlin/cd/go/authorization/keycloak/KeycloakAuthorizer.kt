@@ -16,7 +16,6 @@
 
 package cd.go.authorization.keycloak
 
-import cd.go.authorization.keycloak.models.AuthConfig
 import cd.go.authorization.keycloak.models.Role
 import java.text.MessageFormat.format
 
@@ -25,7 +24,7 @@ class KeycloakAuthorizer(
 ) {
     constructor() : this(MembershipChecker())
 
-    fun authorize(loggedInUser: KeycloakUser, authConfig: AuthConfig, roles: List<Role>): List<String> {
+    fun authorize(loggedInUser: KeycloakUser, roles: List<Role>): List<String> {
         val assignedRoles = mutableListOf<String>()
 
         if (roles.isEmpty()) {
@@ -43,7 +42,7 @@ class KeycloakAuthorizer(
             }
 
             val groups = role.roleConfiguration()?.groups() ?: emptyList()
-            if (membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, authConfig, groups)) {
+            if (membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, groups)) {
                 KeycloakPlugin.LOG.debug(format("[Authorize] Assigning role `{0}` to user `{1}`. As user is a member of at least one group.", role.name(), loggedInUser.email))
                 role.name()?.let { assignedRoles.add(it) }
             }

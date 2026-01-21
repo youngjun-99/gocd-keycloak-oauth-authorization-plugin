@@ -52,7 +52,7 @@ class UserAuthenticationRequestExecutor(
 
             val userMap = mapOf(
                 "user" to User(keycloakUser),
-                "roles" to keycloakAuthorizer.authorize(keycloakUser, authConfig, request.roles())
+                "roles" to keycloakAuthorizer.authorize(keycloakUser, request.roles())
             )
 
             return DefaultGoPluginApiResponse.success(GSON.toJson(userMap))

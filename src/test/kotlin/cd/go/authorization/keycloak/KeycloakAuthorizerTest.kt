@@ -16,7 +16,6 @@
 
 package cd.go.authorization.keycloak
 
-import cd.go.authorization.keycloak.models.AuthConfig
 import cd.go.authorization.keycloak.models.KeycloakRoleConfiguration
 import cd.go.authorization.keycloak.models.Role
 import org.hamcrest.MatcherAssert.assertThat
@@ -43,9 +42,6 @@ class KeycloakAuthorizerTest {
     @Mock
     private lateinit var membershipChecker: MembershipChecker
 
-    @Mock
-    private lateinit var authConfig: AuthConfig
-
     @BeforeEach
     fun setUp() {
         authorizer = KeycloakAuthorizer(membershipChecker)
@@ -53,10 +49,9 @@ class KeycloakAuthorizerTest {
 
     @Test
     fun shouldReturnEmptyListIfNoRoleConfiguredForGivenAuthConfig() {
-        val assignedRoles = authorizer.authorize(loggedInUser, authConfig, emptyList())
+        val assignedRoles = authorizer.authorize(loggedInUser, emptyList())
 
         assertThat(assignedRoles, hasSize(0))
-        verifyNoInteractions(authConfig)
         verifyNoInteractions(membershipChecker)
     }
 
@@ -68,9 +63,9 @@ class KeycloakAuthorizerTest {
         `when`(role.name()).thenReturn("admin")
         `when`(role.roleConfiguration()).thenReturn(roleConfiguration)
         `when`(roleConfiguration.groups()).thenReturn(listOf("group-1"))
-        `when`(membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, authConfig, roleConfiguration.groups())).thenReturn(true)
+        `when`(membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, roleConfiguration.groups())).thenReturn(true)
 
-        val assignedRoles = authorizer.authorize(loggedInUser, authConfig, listOf(role))
+        val assignedRoles = authorizer.authorize(loggedInUser, listOf(role))
 
         assertThat(assignedRoles, hasSize(1))
         assertThat(assignedRoles, contains("admin"))
@@ -84,9 +79,9 @@ class KeycloakAuthorizerTest {
         `when`(role.name()).thenReturn("admin")
         `when`(role.roleConfiguration()).thenReturn(roleConfiguration)
         `when`(roleConfiguration.groups()).thenReturn(listOf("group-1"))
-        `when`(membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, authConfig, roleConfiguration.groups())).thenReturn(false)
+        `when`(membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, roleConfiguration.groups())).thenReturn(false)
 
-        val assignedRoles = authorizer.authorize(loggedInUser, authConfig, listOf(role))
+        val assignedRoles = authorizer.authorize(loggedInUser, listOf(role))
 
         assertThat(assignedRoles, hasSize(0))
     }
