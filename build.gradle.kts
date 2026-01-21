@@ -20,7 +20,28 @@ plugins {
 }
 
 group = "cd.go"
-version = "3.0.1"
+
+val baseVersion = "3.0.1"
+val gitBranch: String by lazy {
+    System.getenv("GITHUB_REF_NAME")
+        ?: try {
+            val process = ProcessBuilder("git", "rev-parse", "--abbrev-ref", "HEAD")
+                .directory(projectDir)
+                .redirectErrorStream(true)
+                .start()
+            process.inputStream.bufferedReader().readText().trim()
+        } catch (e: Exception) {
+            "unknown"
+        }
+}
+val versionSuffix = when {
+    gitBranch == "main" || gitBranch == "master" -> ""
+    gitBranch == "develop" -> "-alpha"
+    gitBranch.startsWith("feature/") -> "-beta"
+    else -> "-snapshot"
+}
+val isReleaseBranch = versionSuffix.isEmpty()
+version = "$baseVersion$versionSuffix"
 
 val pluginId = "cd.go.authorization.keycloak"
 val pluginVersion = project.version.toString()
@@ -123,7 +144,7 @@ githubRelease {
     token(System.getenv("GITHUB_TOKEN") ?: "")
     tagName("v${project.version}")
     releaseName("v${project.version}")
-    targetCommitish("main")
-    prerelease(!"No".equals(System.getenv("PRERELEASE"), ignoreCase = true))
+    targetCommitish(gitBranch)
+    prerelease(!isReleaseBranch || !"No".equals(System.getenv("PRERELEASE"), ignoreCase = true))
     releaseAssets(tasks.jar.get().outputs.files)
 }
