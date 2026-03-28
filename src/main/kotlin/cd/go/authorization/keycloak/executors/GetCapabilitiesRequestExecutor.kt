@@ -22,13 +22,13 @@ import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse
 import com.thoughtworks.go.plugin.api.response.DefaultGoApiResponse.SUCCESS_RESPONSE_CODE
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse
 
-class GetCapabilitiesRequestExecutor {
+class GetCapabilitiesRequestExecutor : RequestExecutor {
 
-    fun execute(): GoPluginApiResponse {
+    override fun execute(): GoPluginApiResponse {
         val capabilities = getCapabilities()
         return DefaultGoPluginApiResponse(SUCCESS_RESPONSE_CODE, capabilities.toJSON())
     }
 
     internal fun getCapabilities(): Capabilities =
-        Capabilities(SupportedAuthType.Web, canSearch = true, canAuthorize = true)
+        Capabilities(SupportedAuthType.Web, canSearch = false, canAuthorize = true)
 }

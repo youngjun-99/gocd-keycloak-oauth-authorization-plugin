@@ -51,8 +51,9 @@ class KeycloakConfiguration : Validatable {
 
     constructor()
 
-    constructor(keycloakEndpoint: String?, clientId: String?, clientSecret: String?) {
+    constructor(keycloakEndpoint: String?, keycloakRealm: String?, clientId: String?, clientSecret: String?) {
         this.keycloakEndpoint = keycloakEndpoint
+        this.keycloakRealm = keycloakRealm
         this.clientId = clientId
         this.clientSecret = clientSecret
     }

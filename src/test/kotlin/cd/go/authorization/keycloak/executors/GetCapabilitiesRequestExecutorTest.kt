@@ -29,7 +29,7 @@ class GetCapabilitiesRequestExecutorTest {
             {
                 "supported_auth_type":"web",
                 "can_authorize":true,
-                "can_search":true
+                "can_search":false
             }
         """.trimIndent()
 

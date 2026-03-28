@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package cd.go.authorization.keycloak.requests
+package cd.go.authorization.keycloak.executors
 
 import cd.go.authorization.keycloak.annotation.MetadataValidator
-import cd.go.authorization.keycloak.executors.RequestExecutor
+import cd.go.authorization.keycloak.requests.RoleConfigValidateRequest
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse
 

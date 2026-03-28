@@ -17,6 +17,7 @@
 package cd.go.authorization.keycloak.requests
 
 import cd.go.authorization.keycloak.executors.RequestExecutor
+import cd.go.authorization.keycloak.executors.RoleConfigValidateRequestExecutor
 import cd.go.authorization.keycloak.models.KeycloakRoleConfiguration
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest
 
