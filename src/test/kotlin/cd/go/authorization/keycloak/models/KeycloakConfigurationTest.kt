@@ -29,12 +29,14 @@ class KeycloakConfigurationTest {
         val keycloakConfiguration = KeycloakConfiguration.fromJSON("""
             {
               "KeycloakEndpoint": "https://example.co.in",
+              "KeycloakRealm": "master",
               "ClientId": "client-id",
               "ClientSecret": "client-secret"
             }
         """.trimIndent())
 
         assertThat(keycloakConfiguration.keycloakEndpoint(), `is`("https://example.co.in"))
+        assertThat(keycloakConfiguration.keycloakRealm(), `is`("master"))
         assertThat(keycloakConfiguration.clientId(), `is`("client-id"))
         assertThat(keycloakConfiguration.clientSecret(), `is`("client-secret"))
     }
@@ -42,12 +44,13 @@ class KeycloakConfigurationTest {
     @Test
     fun shouldSerializeToJSON() {
         val keycloakConfiguration = KeycloakConfiguration(
-            "https://example.co.in", "client-id", "client-secret"
+            "https://example.co.in", "master", "client-id", "client-secret"
         )
 
         val expectedJSON = """
             {
               "KeycloakEndpoint": "https://example.co.in",
+              "KeycloakRealm": "master",
               "ClientId": "client-id",
               "ClientSecret": "client-secret"
             }
@@ -59,12 +62,13 @@ class KeycloakConfigurationTest {
     @Test
     fun shouldConvertConfigurationToProperties() {
         val keycloakConfiguration = KeycloakConfiguration(
-            "https://example.co.in", "client-id", "client-secret"
+            "https://example.co.in", "master", "client-id", "client-secret"
         )
 
         val properties = keycloakConfiguration.toProperties()
 
         assertThat(properties, hasEntry("KeycloakEndpoint", "https://example.co.in"))
+        assertThat(properties, hasEntry("KeycloakRealm", "master"))
         assertThat(properties, hasEntry("ClientId", "client-id"))
         assertThat(properties, hasEntry("ClientSecret", "client-secret"))
     }

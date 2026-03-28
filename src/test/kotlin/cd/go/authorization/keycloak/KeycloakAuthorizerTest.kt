@@ -85,4 +85,81 @@ class KeycloakAuthorizerTest {
 
         assertThat(assignedRoles, hasSize(0))
     }
+
+    @Test
+    fun shouldAssignRoleIfUserEmailMatchesAllowedUsers() {
+        val role = mock(Role::class.java)
+        val roleConfiguration = mock(KeycloakRoleConfiguration::class.java)
+
+        `when`(loggedInUser.email).thenReturn("foo@bar.com")
+        `when`(role.name()).thenReturn("admin")
+        `when`(role.roleConfiguration()).thenReturn(roleConfiguration)
+        `when`(roleConfiguration.users()).thenReturn(listOf("foo@bar.com"))
+        `when`(roleConfiguration.groups()).thenReturn(emptyList())
+
+        val assignedRoles = authorizer.authorize(loggedInUser, listOf(role))
+
+        assertThat(assignedRoles, hasSize(1))
+        assertThat(assignedRoles, contains("admin"))
+        verifyNoInteractions(membershipChecker)
+    }
+
+    @Test
+    fun shouldAssignRoleIfUserEmailMatchesCaseInsensitive() {
+        val role = mock(Role::class.java)
+        val roleConfiguration = mock(KeycloakRoleConfiguration::class.java)
+
+        `when`(loggedInUser.email).thenReturn("Foo@Bar.com")
+        `when`(role.name()).thenReturn("admin")
+        `when`(role.roleConfiguration()).thenReturn(roleConfiguration)
+        `when`(roleConfiguration.users()).thenReturn(listOf("foo@bar.com"))
+        `when`(roleConfiguration.groups()).thenReturn(emptyList())
+
+        val assignedRoles = authorizer.authorize(loggedInUser, listOf(role))
+
+        assertThat(assignedRoles, hasSize(1))
+        assertThat(assignedRoles, contains("admin"))
+    }
+
+    @Test
+    fun shouldNotAssignRoleWhenUserEmailDoesNotMatch() {
+        val role = mock(Role::class.java)
+        val roleConfiguration = mock(KeycloakRoleConfiguration::class.java)
+
+        `when`(loggedInUser.email).thenReturn("other@bar.com")
+        `when`(role.name()).thenReturn("admin")
+        `when`(role.roleConfiguration()).thenReturn(roleConfiguration)
+        `when`(roleConfiguration.users()).thenReturn(listOf("foo@bar.com"))
+        `when`(roleConfiguration.groups()).thenReturn(emptyList())
+        `when`(membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, emptyList())).thenReturn(false)
+
+        val assignedRoles = authorizer.authorize(loggedInUser, listOf(role))
+
+        assertThat(assignedRoles, hasSize(0))
+    }
+
+    @Test
+    fun shouldAssignMultipleRoles() {
+        val role1 = mock(Role::class.java)
+        val role2 = mock(Role::class.java)
+        val roleConfig1 = mock(KeycloakRoleConfiguration::class.java)
+        val roleConfig2 = mock(KeycloakRoleConfiguration::class.java)
+
+        `when`(loggedInUser.email).thenReturn("foo@bar.com")
+
+        `when`(role1.name()).thenReturn("admin")
+        `when`(role1.roleConfiguration()).thenReturn(roleConfig1)
+        `when`(roleConfig1.users()).thenReturn(listOf("foo@bar.com"))
+
+        `when`(role2.name()).thenReturn("developer")
+        `when`(role2.roleConfiguration()).thenReturn(roleConfig2)
+        `when`(roleConfig2.users()).thenReturn(emptyList())
+        `when`(roleConfig2.groups()).thenReturn(listOf("devs"))
+        `when`(membershipChecker.isAMemberOfAtLeastOneGroup(loggedInUser, listOf("devs"))).thenReturn(true)
+
+        val assignedRoles = authorizer.authorize(loggedInUser, listOf(role1, role2))
+
+        assertThat(assignedRoles, hasSize(2))
+        assertThat(assignedRoles, contains("admin", "developer"))
+    }
 }
